@@ -316,6 +316,11 @@ public abstract class FutureMono extends Mono<Void> {
 
 		@Override
 		public void subscribe(CoreSubscriber<? super Void> s) {
+			if (!channel.isActive()) {
+				Operators.complete(s);
+				return;
+			}
+
 			ChannelFutureSubscription cfs = new ChannelFutureSubscription(channel, s);
 
 			s.onSubscribe(cfs);
